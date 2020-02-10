@@ -89,67 +89,67 @@ class OneVsOne extends PluginBase implements Listener {
         switch ($args[0]) {
             case "help":
                 $player->sendMessage("§a> 1vs1 setup help (1/1):\n".
-                "§7help : Displays list of available setup commands\n" .
-                "§7level : Set arena level\n".
-                "§7spawn : Set arena spawns\n".
-                "§7joinsign : Set arena joinsign\n".
-                "§7enable : Enable the arena");
+                "§7help : Ukážou ti setup commandy\n" .
+                "§7level : Setneš level arény\n".
+                "§7spawn : Setneš spawn arény\n".
+                "§7joinsign : Setneš ceduli arény\n".
+                "§7enable : Spustíš arénu");
                 break;
             case "level":
                 if(!isset($args[1])) {
-                    $player->sendMessage("§cUsage: §7level <levelName>");
+                    $player->sendMessage("§cPoužij: §7level <jméno levelu>");
                     break;
                 }
                 if(!$this->getServer()->isLevelGenerated($args[1])) {
-                    $player->sendMessage("§c> Level $args[1] does not found!");
+                    $player->sendMessage("§c> Level $args[1] není k dispozici!");
                     break;
                 }
-                $player->sendMessage("§a> Arena level updated to $args[1]!");
+                $player->sendMessage("§a> Arena level byl updatnut $args[1]!");
                 $arena->data["level"] = $args[1];
                 break;
             case "spawn":
                 if(!isset($args[1])) {
-                    $player->sendMessage("§cUsage: §7setspawn <int: spawn>");
+                    $player->sendMessage("§cPoužij: §7setspawn <kolikátý Spawn >");
                     break;
                 }
                 if(!is_numeric($args[1])) {
-                    $player->sendMessage("§cType number!");
+                    $player->sendMessage("§cNapiš číslo!");
                     break;
                 }
                 if((int)$args[1] > $arena->data["slots"]) {
-                    $player->sendMessage("§cThere are only {$arena->data["slots"]} slots!");
+                    $player->sendMessage("§cJe tu jen {$arena->data["slots"]} slotů!");
                     break;
                 }
 
                 $arena->data["spawns"]["spawn-{$args[1]}"] = (new Vector3($player->getX(), $player->getY(), $player->getZ()))->__toString();
-                $player->sendMessage("§a> Spawn $args[1] set to X: " . (string)round($player->getX()) . " Y: " . (string)round($player->getY()) . " Z: " . (string)round($player->getZ()));
+                $player->sendMessage("§a> Spawn $args[1] byl udělán na X: " . (string)round($player->getX()) . " Y: " . (string)round($player->getY()) . " Z: " . (string)round($player->getZ()));
                 break;
             case "joinsign":
-                $player->sendMessage("§a> Break block to set join sign!");
+                $player->sendMessage("§a> Znič blok a udělej aréna ceduli!");
                 $this->setupData[$player->getName()] = 0;
                 break;
             case "enable":
                 if(!$arena->setup) {
-                    $player->sendMessage("§6> Arena is already enabled!");
+                    $player->sendMessage("§6> Aréna je spuštěná!");
                     break;
                 }
                 if(!$arena->enable()) {
-                    $player->sendMessage("§c> Could not load arena, there are missing information!");
+                    $player->sendMessage("§c> Nejde načíst aréna, chybí informace!");
                     break;
                 }
-                $player->sendMessage("§a> Arena enabled!");
+                $player->sendMessage("§a> Aréna je spuštěná!");
                 break;
             case "done":
-                $player->sendMessage("§a> You are successfully leaved setup mode!");
+                $player->sendMessage("§a> Úspěšně jsi opustil setup mód!");
                 unset($this->setters[$player->getName()]);
                 if(isset($this->setupData[$player->getName()])) {
                     unset($this->setupData[$player->getName()]);
                 }
                 break;
             default:
-                $player->sendMessage("§6> You are in setup mode.\n".
-                    "§7- use §lhelp §r§7to display available commands\n"  .
-                    "§7- or §ldone §r§7to leave setup mode");
+                $player->sendMessage("§6> Jsi v setup módu.\n".
+                    "§7- použij §lhelp §r§7pro ukázání commandů\n"  .
+                    "§7- nebo §ldone §r§7pro leavnutí setup módu");
                 break;
         }
     }
@@ -164,7 +164,7 @@ class OneVsOne extends PluginBase implements Listener {
             switch ($this->setupData[$player->getName()]) {
                 case 0:
                     $this->setters[$player->getName()]->data["joinsign"] = [(new Vector3($block->getX(), $block->getY(), $block->getZ()))->__toString(), $block->getLevel()->getFolderName()];
-                    $player->sendMessage("§a> Join sign updated!");
+                    $player->sendMessage("§a> Cedule updatnuta!");
                     unset($this->setupData[$player->getName()]);
                     $event->setCancelled(\true);
                     break;
@@ -181,6 +181,6 @@ class OneVsOne extends PluginBase implements Listener {
             $arena->joinToArena($player);
             return;
         }
-        $player->sendMessage("§c> All the arenas are full!");
+        $player->sendMessage("§c> Všechny arény jsou obsazeny, prosím počkej!");
     }
 }
